@@ -1,6 +1,6 @@
-const pool = require('./_db');
+import pool from './_db.js';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
@@ -41,4 +41,4 @@ module.exports = async (req, res) => {
     console.error('API Error /data:', error);
     res.status(500).json({ error: error.message });
   }
-};
+}
