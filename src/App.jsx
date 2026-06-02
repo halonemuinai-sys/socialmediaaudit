@@ -897,7 +897,7 @@ export default function App() {
               <input 
                 type="text" 
                 className="form-control" 
-                placeholder="Masukkan username (misal: head, retail)"
+                placeholder="Masukkan username Anda"
                 value={loginForm.username}
                 onChange={e => setLoginForm({ ...loginForm, username: e.target.value })}
                 required
