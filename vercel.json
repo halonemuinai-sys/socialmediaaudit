@@ -2,10 +2,6 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/api/:action",
-      "destination": "/api/index.js?action=:action"
-    },
-    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
