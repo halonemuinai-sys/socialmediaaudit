@@ -946,10 +946,14 @@ export default function App() {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-submit-animated" style={{ width: '100%', padding: '12px', fontSize: '0.9rem' }}>
+            <button type="submit" className="btn btn-submit-animated" style={{ width: '100%', padding: '12px', fontSize: '0.9rem', marginBottom: '20px' }}>
               Masuk ke Dashboard
             </button>
           </form>
+          
+          <div style={{ borderTop: '1px solid rgba(226, 232, 240, 0.8)', paddingTop: '16px', marginTop: '20px', textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '-0.01em' }}>
+            © 2026 PT Mugi Rekso Abadi (Group). All rights reserved.
+          </div>
         </div>
       </div>
     );
