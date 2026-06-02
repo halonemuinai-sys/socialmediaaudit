@@ -880,23 +880,17 @@ export default function App() {
   // Render Login Portal (Modern Minimalist Light Theme)
   if (!isLoggedIn) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px', background: 'radial-gradient(circle at 50% 50%, #f8fafc 0%, #e2e8f0 100%)' }}>
+      <div className="login-container">
+        <div className="login-orb-1"></div>
+        <div className="login-orb-2"></div>
         <div className="cyber-grid"></div>
-        <div style={{
-          background: 'white',
-          border: '1px solid #e2e8f0',
-          borderRadius: '16px',
-          boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02)',
-          maxWidth: '380px',
-          width: '100%',
-          padding: '36px',
-          zIndex: 10
-        }}>
+        
+        <div className="login-card-animated">
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <h1 style={{ fontSize: '1.7rem', fontWeight: 800, background: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.03em', marginBottom: '4px' }}>
+            <h1 className="login-header-logo-animated">
               MRA Group Audit
             </h1>
-            <p style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 500 }}>Social Media Security Dashboard</p>
+            <p style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>Social Media Security Dashboard</p>
           </div>
           
           {errorMsg && (
@@ -952,7 +946,7 @@ export default function App() {
               </div>
             </div>
 
-            <button type="submit" className="btn" style={{ width: '100%', padding: '12px', fontSize: '0.9rem' }}>
+            <button type="submit" className="btn btn-submit-animated" style={{ width: '100%', padding: '12px', fontSize: '0.9rem' }}>
               Masuk ke Dashboard
             </button>
           </form>
