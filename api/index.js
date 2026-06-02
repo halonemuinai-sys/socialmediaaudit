@@ -21,8 +21,8 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const { pathname } = new URL(req.url, `http://${req.headers.host}`);
-  const action = pathname.split('/').pop();
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const action = req.query?.action || url.searchParams.get('action') || url.pathname.split('/').pop();
 
   try {
     if (req.method === 'GET' && action === 'data') {
