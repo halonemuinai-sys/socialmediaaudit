@@ -1051,7 +1051,6 @@ export default function App() {
                     key={unit.id}
                     className={`brand-card-item ${isActive ? 'active' : ''}`}
                     onClick={() => setSelectedUnit(unit)}
-                    style={{ animationDelay: `${index * 45}ms` }}
                   >
                     <div className="brand-card-info">
                       <div className="brand-card-title">{unit.name}</div>
