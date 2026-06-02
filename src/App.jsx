@@ -1036,7 +1036,7 @@ export default function App() {
                 Tidak ada brand ditemukan
               </div>
             ) : (
-              filteredUnits.map(unit => {
+              filteredUnits.map((unit, index) => {
                 const pic = getUnitPic(unit.id);
                 const status = getUnitStatus(unit.id);
                 const isActive = selectedUnit?.id === unit.id;
@@ -1051,6 +1051,7 @@ export default function App() {
                     key={unit.id}
                     className={`brand-card-item ${isActive ? 'active' : ''}`}
                     onClick={() => setSelectedUnit(unit)}
+                    style={{ animationDelay: `${index * 45}ms` }}
                   >
                     <div className="brand-card-info">
                       <div className="brand-card-title">{unit.name}</div>
