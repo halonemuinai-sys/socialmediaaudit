@@ -279,7 +279,14 @@ export default function App() {
   const fetchSupabaseData = async () => {
     try {
       const response = await fetch('/api/data');
-      if (!response.ok) throw new Error('Database serverless API offline');
+      if (!response.ok) {
+        let errMsg = 'Database serverless API offline';
+        try {
+          const errData = await response.json();
+          if (errData && errData.error) errMsg = errData.error;
+        } catch (_) {}
+        throw new Error(errMsg);
+      }
       const data = await response.json();
 
       setBusinessUnits(data.units);
@@ -289,7 +296,7 @@ export default function App() {
       setUsersList(data.users);
     } catch (e) {
       console.error(e);
-      setErrorMsg('Gagal memuat data dari API Database Supabase. Menggunakan mode Demo Lokal.');
+      setErrorMsg(`Gagal memuat data: ${e.message}. Menggunakan mode Demo Lokal.`);
       setUseSupabase(false);
     }
   };
