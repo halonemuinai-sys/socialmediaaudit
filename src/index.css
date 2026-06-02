@@ -185,11 +185,8 @@ body {
   flex-grow: 1;
   padding-right: 4px;
   scroll-behavior: smooth;
-  /* Premium fade mask for scrolling cards */
-  mask-image: linear-gradient(to bottom, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12px, black calc(100% - 12px), transparent 100%);
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 /* Custom Scrollbar for Brand List */
