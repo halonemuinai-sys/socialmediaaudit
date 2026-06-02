@@ -164,6 +164,19 @@ const SearchIcon = ({ size = 16, color = 'currentColor' }) => (
   </svg>
 );
 
+const EyeIcon = ({ size = 16, color = 'currentColor' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+
+const EyeOffIcon = ({ size = 16, color = 'currentColor' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m9.9 9.9L17.772 17.77m-1.544-1.544a3 3 0 11-4.243-4.243m4.243 4.243l-4.243-4.243m16.059 16.059L21 21" />
+  </svg>
+);
+
 export default function App() {
   const [useSupabase, setUseSupabase] = useState(true);
   const [businessUnits, setBusinessUnits] = useState([]);
@@ -176,6 +189,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [currentUser, setCurrentUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   
   // UI states
   const [selectedUnit, setSelectedUnit] = useState(null);
@@ -906,14 +920,36 @@ export default function App() {
             
             <div className="form-group" style={{ marginBottom: '24px' }}>
               <label>Kata Sandi</label>
-              <input 
-                type="password" 
-                className="form-control" 
-                placeholder="••••••••"
-                value={loginForm.password}
-                onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
-                required
-              />
+              <div style={{ position: 'relative' }}>
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  className="form-control" 
+                  placeholder="••••••••"
+                  value={loginForm.password}
+                  onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                  required
+                  style={{ paddingRight: '40px' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: 0
+                  }}
+                >
+                  {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" className="btn" style={{ width: '100%', padding: '12px', fontSize: '0.9rem' }}>
