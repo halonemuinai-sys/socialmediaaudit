@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       WHERE p.is_active = true
     `);
     const auditsRes = await pool.query('SELECT * FROM social_audit.social_media_audit_logs');
-    const usersRes = await pool.query('SELECT id, name, email, department, role, sector FROM social_audit.users');
+    const usersRes = await pool.query('SELECT id, name, username, department, role, sector FROM social_audit.users');
 
     res.status(200).json({
       units: unitsRes.rows,

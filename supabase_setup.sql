@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS social_audit.users CASCADE;
 CREATE TABLE social_audit.users (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    username VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL DEFAULT 'Password123!',
     department VARCHAR(255) NOT NULL,
     role VARCHAR(50) NOT NULL DEFAULT 'PIC', -- 'ADMIN' (Head of Marketing), 'PIC'
@@ -63,12 +63,12 @@ CREATE TABLE social_audit.social_media_audit_logs (
 );
 
 -- 8. Seed Data Awal - Akun PIC & Admin dengan Sektor Khusus
-INSERT INTO social_audit.users (id, name, email, password, department, role, sector) VALUES
-('ADMIN-01', 'Alfonso (Head of Marketing)', 'head@mragroup.co.id', 'Password123!', 'Marketing Head Office', 'ADMIN', 'ALL'),
-('USR-RETAIL', 'Budi Retail', 'retail@mragroup.co.id', 'Password123!', 'Retail & Lifestyle', 'PIC', 'RETAIL'),
-('USR-FB', 'Siti F&B', 'fb@mragroup.co.id', 'Password123!', 'Food & Beverage', 'PIC', 'FB'),
-('USR-MEDIA', 'Andi Media', 'media@mragroup.co.id', 'Password123!', 'Publishing & Media', 'PIC', 'MEDIA'),
-('USR-RADIO', 'Rian Radio', 'radio@mragroup.co.id', 'Password123!', 'MRA Broadcast', 'PIC', 'RADIO')
+INSERT INTO social_audit.users (id, name, username, password, department, role, sector) VALUES
+('ADMIN-01', 'Alfonso (Head of Marketing)', 'head', 'Password123!', 'Marketing Head Office', 'ADMIN', 'ALL'),
+('USR-RETAIL', 'Budi Retail', 'retail', 'Password123!', 'Retail & Lifestyle', 'PIC', 'RETAIL'),
+('USR-FB', 'Siti F&B', 'fb', 'Password123!', 'Food & Beverage', 'PIC', 'FB'),
+('USR-MEDIA', 'Andi Media', 'media', 'Password123!', 'Publishing & Media', 'PIC', 'MEDIA'),
+('USR-RADIO', 'Rian Radio', 'radio', 'Password123!', 'MRA Broadcast', 'PIC', 'RADIO')
 ON CONFLICT (id) DO NOTHING;
 
 -- 9. Seed Data Awal - 18 Unit Bisnis MRA terbagi dalam 4 Sektor Utama

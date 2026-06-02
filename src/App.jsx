@@ -174,7 +174,7 @@ export default function App() {
   
   // Auth states
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [currentUser, setCurrentUser] = useState(null);
   
   // UI states
@@ -243,11 +243,11 @@ export default function App() {
       const parsedUsers = localUsers ? JSON.parse(localUsers) : [];
       if (parsedUsers.length === 0 || !parsedUsers[0].password) {
         const mockUsers = [
-          { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', email: 'head@mragroup.co.id', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
-          { id: 'USR-RETAIL', name: 'Budi Retail', email: 'retail@mragroup.co.id', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
-          { id: 'USR-FB', name: 'Siti F&B', email: 'fb@mragroup.co.id', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
-          { id: 'USR-MEDIA', name: 'Andi Media', email: 'media@mragroup.co.id', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
-          { id: 'USR-RADIO', name: 'Rian Radio', email: 'radio@mragroup.co.id', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
+          { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
+          { id: 'USR-RETAIL', name: 'Budi Retail', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
+          { id: 'USR-FB', name: 'Siti F&B', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
+          { id: 'USR-MEDIA', name: 'Andi Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
+          { id: 'USR-RADIO', name: 'Rian Radio', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
         ];
         localStorage.setItem('mra_users', JSON.stringify(mockUsers));
         setUsersList(mockUsers);
@@ -256,11 +256,11 @@ export default function App() {
       }
     } else {
       const mockUsers = [
-        { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', email: 'head@mragroup.co.id', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
-        { id: 'USR-RETAIL', name: 'Budi Retail', email: 'retail@mragroup.co.id', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
-        { id: 'USR-FB', name: 'Siti F&B', email: 'fb@mragroup.co.id', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
-        { id: 'USR-MEDIA', name: 'Andi Media', email: 'media@mragroup.co.id', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
-        { id: 'USR-RADIO', name: 'Rian Radio', email: 'radio@mragroup.co.id', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
+        { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
+        { id: 'USR-RETAIL', name: 'Budi Retail', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
+        { id: 'USR-FB', name: 'Siti F&B', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
+        { id: 'USR-MEDIA', name: 'Andi Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
+        { id: 'USR-RADIO', name: 'Rian Radio', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
       ];
       localStorage.setItem('mra_units', JSON.stringify(SEED_BUSINESS_UNITS));
       localStorage.setItem('mra_socials', JSON.stringify(SEED_SOCIALS));
@@ -311,11 +311,11 @@ export default function App() {
         const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: loginForm.email, password: loginForm.password })
+          body: JSON.stringify({ username: loginForm.username, password: loginForm.password })
         });
 
         if (!response.ok) {
-          setErrorMsg('Email atau password salah!');
+          setErrorMsg('Username atau password salah!');
           return;
         }
         
@@ -324,18 +324,18 @@ export default function App() {
           setCurrentUser(data.user);
           setIsLoggedIn(true);
         } else {
-          setErrorMsg('Email atau password salah!');
+          setErrorMsg('Username atau password salah!');
         }
       } catch (err) {
         setErrorMsg('Gagal login: ' + err.message);
       }
     } else {
-      const user = usersList.find(u => u.email === loginForm.email && u.password === loginForm.password);
+      const user = usersList.find(u => u.username === loginForm.username && u.password === loginForm.password);
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
       } else {
-        setErrorMsg('Email atau password salah!');
+        setErrorMsg('Username atau password salah!');
       }
     }
   };
@@ -345,7 +345,7 @@ export default function App() {
     setCurrentUser(null);
     setSelectedUnit(null);
     setSearchQuery('');
-    setLoginForm({ email: '', password: '' });
+    setLoginForm({ username: '', password: '' });
   };
 
   // Actions
@@ -883,13 +883,13 @@ export default function App() {
 
           <form onSubmit={handleLogin}>
             <div className="form-group">
-              <label>Email Karyawan</label>
+              <label>Username Karyawan</label>
               <input 
-                type="email" 
+                type="text" 
                 className="form-control" 
-                placeholder="email@mragroup.co.id"
-                value={loginForm.email}
-                onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
+                placeholder="Masukkan username (misal: head, retail)"
+                value={loginForm.username}
+                onChange={e => setLoginForm({ ...loginForm, username: e.target.value })}
                 required
               />
             </div>

@@ -20,16 +20,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     const result = await pool.query(
-      'SELECT id, name, email, department, role, sector FROM social_audit.users WHERE email = $1 AND password = $2',
-      [email, password]
+      'SELECT id, name, username, department, role, sector FROM social_audit.users WHERE username = $1 AND password = $2',
+      [username, password]
     );
 
     if (result.rows.length > 0) {
       res.status(200).json({ success: true, user: result.rows[0] });
     } else {
-      res.status(401).json({ success: false, message: 'Email atau password salah!' });
+      res.status(401).json({ success: false, message: 'Username atau password salah!' });
     }
   } catch (error) {
     console.error('API Error /login:', error);

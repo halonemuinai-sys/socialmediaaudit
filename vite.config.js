@@ -57,7 +57,7 @@ function vercelApiPlugin() {
                 WHERE p.is_active = true
               `);
               const auditsRes = await pool.query('SELECT * FROM social_audit.social_media_audit_logs');
-              const usersRes = await pool.query('SELECT id, name, email, department, role, sector FROM social_audit.users');
+              const usersRes = await pool.query('SELECT id, name, username, department, role, sector FROM social_audit.users');
 
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({
@@ -71,10 +71,10 @@ function vercelApiPlugin() {
             }
 
             if (req.method === 'POST' && action === 'login') {
-              const { email, password } = postData;
+              const { username, password } = postData;
               const result = await pool.query(
-                'SELECT id, name, email, department, role, sector FROM social_audit.users WHERE email = $1 AND password = $2',
-                [email, password]
+                'SELECT id, name, username, department, role, sector FROM social_audit.users WHERE username = $1 AND password = $2',
+                [username, password]
               );
               
               res.setHeader('Content-Type', 'application/json');
@@ -82,7 +82,7 @@ function vercelApiPlugin() {
                 res.end(JSON.stringify({ success: true, user: result.rows[0] }));
               } else {
                 res.statusCode = 401;
-                res.end(JSON.stringify({ success: false, message: 'Email atau password salah!' }));
+                res.end(JSON.stringify({ success: false, message: 'Username atau password salah!' }));
               }
               return;
             }
