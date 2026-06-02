@@ -64,11 +64,11 @@ CREATE TABLE social_audit.social_media_audit_logs (
 
 -- 8. Seed Data Awal - Akun PIC & Admin dengan Sektor Khusus
 INSERT INTO social_audit.users (id, name, username, password, department, role, sector) VALUES
-('ADMIN-01', 'Alfonso (Head of Marketing)', 'head', 'Password123!', 'Marketing Head Office', 'ADMIN', 'ALL'),
-('USR-RETAIL', 'Budi Retail', 'retail', 'Password123!', 'Retail & Lifestyle', 'PIC', 'RETAIL'),
-('USR-FB', 'Siti F&B', 'fb', 'Password123!', 'Food & Beverage', 'PIC', 'FB'),
-('USR-MEDIA', 'Andi Media', 'media', 'Password123!', 'Publishing & Media', 'PIC', 'MEDIA'),
-('USR-RADIO', 'Rian Radio', 'radio', 'Password123!', 'MRA Broadcast', 'PIC', 'RADIO')
+('ADMIN-01', 'Aris Setiyono (IT Auditor)', 'head', 'Password123!', 'Marketing Head Office', 'ADMIN', 'ALL'),
+('USR-RETAIL', 'Retail & Lifestyle', 'retail', 'Password123!', 'Retail & Lifestyle', 'PIC', 'RETAIL'),
+('USR-FB', 'Food & Beverage', 'fb', 'Password123!', 'Food & Beverage', 'PIC', 'FB'),
+('USR-MEDIA', 'Publishing & Media', 'media', 'Password123!', 'Publishing & Media', 'PIC', 'MEDIA'),
+('USR-RADIO', 'MRA Broadcast', 'radio', 'Password123!', 'MRA Broadcast', 'PIC', 'RADIO')
 ON CONFLICT (id) DO NOTHING;
 
 -- 9. Seed Data Awal - 18 Unit Bisnis MRA terbagi dalam 4 Sektor Utama

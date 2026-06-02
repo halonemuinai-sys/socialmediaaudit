@@ -243,24 +243,34 @@ export default function App() {
       const parsedUsers = localUsers ? JSON.parse(localUsers) : [];
       if (parsedUsers.length === 0 || !parsedUsers[0].password) {
         const mockUsers = [
-          { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
-          { id: 'USR-RETAIL', name: 'Budi Retail', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
-          { id: 'USR-FB', name: 'Siti F&B', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
-          { id: 'USR-MEDIA', name: 'Andi Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
-          { id: 'USR-RADIO', name: 'Rian Radio', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
+          { id: 'ADMIN-01', name: 'Aris Setiyono (IT Auditor)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
+          { id: 'USR-RETAIL', name: 'Retail & Lifestyle', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
+          { id: 'USR-FB', name: 'Food & Beverage', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
+          { id: 'USR-MEDIA', name: 'Publishing & Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
+          { id: 'USR-RADIO', name: 'MRA Broadcast', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
         ];
         localStorage.setItem('mra_users', JSON.stringify(mockUsers));
         setUsersList(mockUsers);
       } else {
-        setUsersList(parsedUsers);
+        // Force update user names in existing local storage list if they are the default ones
+        const updatedUsersList = parsedUsers.map(u => {
+          if (u.id === 'ADMIN-01') u.name = 'Aris Setiyono (IT Auditor)';
+          if (u.id === 'USR-RETAIL') u.name = 'Retail & Lifestyle';
+          if (u.id === 'USR-FB') u.name = 'Food & Beverage';
+          if (u.id === 'USR-MEDIA') u.name = 'Publishing & Media';
+          if (u.id === 'USR-RADIO') u.name = 'MRA Broadcast';
+          return u;
+        });
+        localStorage.setItem('mra_users', JSON.stringify(updatedUsersList));
+        setUsersList(updatedUsersList);
       }
     } else {
       const mockUsers = [
-        { id: 'ADMIN-01', name: 'Alfonso (Head of Marketing)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
-        { id: 'USR-RETAIL', name: 'Budi Retail', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
-        { id: 'USR-FB', name: 'Siti F&B', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
-        { id: 'USR-MEDIA', name: 'Andi Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
-        { id: 'USR-RADIO', name: 'Rian Radio', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
+        { id: 'ADMIN-01', name: 'Aris Setiyono (IT Auditor)', username: 'head', password: 'Password123!', department: 'Marketing Head Office', role: 'ADMIN', sector: 'ALL' },
+        { id: 'USR-RETAIL', name: 'Retail & Lifestyle', username: 'retail', password: 'Password123!', department: 'Retail & Lifestyle', role: 'PIC', sector: 'RETAIL' },
+        { id: 'USR-FB', name: 'Food & Beverage', username: 'fb', password: 'Password123!', department: 'Food & Beverage', role: 'PIC', sector: 'FB' },
+        { id: 'USR-MEDIA', name: 'Publishing & Media', username: 'media', password: 'Password123!', department: 'Publishing & Media', role: 'PIC', sector: 'MEDIA' },
+        { id: 'USR-RADIO', name: 'MRA Broadcast', username: 'radio', password: 'Password123!', department: 'MRA Broadcast', role: 'PIC', sector: 'RADIO' }
       ];
       localStorage.setItem('mra_units', JSON.stringify(SEED_BUSINESS_UNITS));
       localStorage.setItem('mra_socials', JSON.stringify(SEED_SOCIALS));
