@@ -104,6 +104,12 @@ const PrintIcon = ({ size = 16 }) => (
   </svg>
 );
 
+const EditIcon = ({ size = 16 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+  </svg>
+);
+
 const ExcelIcon = ({ size = 16 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -200,6 +206,7 @@ export default function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [editingSocialAccount, setEditingSocialAccount] = useState(null);
   
   // Form input states
   const [newPic, setNewPic] = useState({ picName: '', businessUnitId: '' });
@@ -482,43 +489,99 @@ export default function App() {
     });
   };
 
-  // Tambah Akun Sosial Media secara manual
+  const openEditSocialModal = (account) => {
+    setEditingSocialAccount(account);
+    setNewSocial({
+      platform: account.platform,
+      handle: account.handle,
+      url: account.url
+    });
+    setIsAddSocialOpen(true);
+  };
+
+  const openAddSocialModal = () => {
+    setEditingSocialAccount(null);
+    setNewSocial({
+      platform: 'instagram',
+      handle: '',
+      url: ''
+    });
+    setIsAddSocialOpen(true);
+  };
+
+  // Tambah atau Edit Akun Sosial Media secara manual
   const handleAddSocial = async (e) => {
     e.preventDefault();
     if (!selectedUnit || !newSocial.handle || !newSocial.url) return;
 
-    const payload = {
-      business_unit_id: selectedUnit.id,
-      platform: newSocial.platform,
-      handle: newSocial.handle.replace('@', ''),
-      url: newSocial.url
-    };
+    if (editingSocialAccount) {
+      // Edit Akun Sosial Media Terdaftar
+      const payload = {
+        id: editingSocialAccount.id,
+        platform: newSocial.platform,
+        handle: newSocial.handle.replace('@', ''),
+        url: newSocial.url
+      };
 
-    if (useSupabase) {
-      try {
-        const response = await fetch('/api/add-social', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!response.ok) throw new Error('Gagal menambahkan akun sosial media');
-        const data = await response.json();
-        setSocialAccounts([...socialAccounts, data]);
-      } catch (err) {
-        setErrorMsg(err.message);
-        return;
+      if (useSupabase) {
+        try {
+          const response = await fetch('/api/edit-social', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error('Gagal memperbarui akun sosial media');
+          const data = await response.json();
+          setSocialAccounts(socialAccounts.map(s => s.id === editingSocialAccount.id ? data : s));
+        } catch (err) {
+          setErrorMsg(err.message);
+          return;
+        }
+      } else {
+        const mockSocial = {
+          ...editingSocialAccount,
+          ...payload
+        };
+        const updatedSocials = socialAccounts.map(s => s.id === editingSocialAccount.id ? mockSocial : s);
+        localStorage.setItem('mra_socials', JSON.stringify(updatedSocials));
+        setSocialAccounts(updatedSocials);
       }
     } else {
-      const mockSocial = {
-        ...payload,
-        id: 'so-' + Date.now()
+      // Tambah Akun Sosial Media Baru
+      const payload = {
+        business_unit_id: selectedUnit.id,
+        platform: newSocial.platform,
+        handle: newSocial.handle.replace('@', ''),
+        url: newSocial.url
       };
-      const updatedSocials = [...socialAccounts, mockSocial];
-      localStorage.setItem('mra_socials', JSON.stringify(updatedSocials));
-      setSocialAccounts(updatedSocials);
+
+      if (useSupabase) {
+        try {
+          const response = await fetch('/api/add-social', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) throw new Error('Gagal menambahkan akun sosial media');
+          const data = await response.json();
+          setSocialAccounts([...socialAccounts, data]);
+        } catch (err) {
+          setErrorMsg(err.message);
+          return;
+        }
+      } else {
+        const mockSocial = {
+          ...payload,
+          id: 'so-' + Date.now()
+        };
+        const updatedSocials = [...socialAccounts, mockSocial];
+        localStorage.setItem('mra_socials', JSON.stringify(updatedSocials));
+        setSocialAccounts(updatedSocials);
+      }
     }
 
     setNewSocial({ platform: 'instagram', handle: '', url: '' });
+    setEditingSocialAccount(null);
     setIsAddSocialOpen(false);
   };
 
@@ -1191,7 +1254,7 @@ export default function App() {
                       👤 Kelola Delegasi
                     </button>
                   )}
-                  <button className="btn" onClick={() => setIsAddSocialOpen(true)}>
+                  <button className="btn" onClick={openAddSocialModal}>
                     + Tambah Akun Sosial
                   </button>
                 </div>
@@ -1298,7 +1361,7 @@ export default function App() {
                     <span><MegaphoneIcon size={48} color="var(--text-muted)" /></span>
                     <p style={{ fontWeight: 600, color: 'var(--text-secondary)' }}>Belum ada akun sosial media terdaftar.</p>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '14px' }}>Silakan tambahkan akun sosial media untuk brand ini agar dapat di-audit.</p>
-                    <button className="btn" onClick={() => setIsAddSocialOpen(true)}>
+                    <button className="btn" onClick={openAddSocialModal}>
                       Tambah Akun Sekarang
                     </button>
                   </div>
@@ -1333,6 +1396,16 @@ export default function App() {
                               <a href={acc.url} target="_blank" rel="noreferrer" className="platform-handle">
                                 @{acc.handle}
                               </a>
+                              <button 
+                                className="edit-social-btn" 
+                                title="Edit akun"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  openEditSocialModal(acc);
+                                }}
+                              >
+                                <EditIcon size={12} />
+                              </button>
                             </div>
                             <span 
                               className={`mra-badge ${statusClass} audit-status-badge has-tooltip`}
@@ -1458,13 +1531,18 @@ export default function App() {
         </div>
       )}
 
-      {/* Modal: Tambah Akun Sosial Media Baru */}
+      {/* Modal: Tambah atau Edit Akun Sosial Media */}
       {isAddSocialOpen && selectedUnit && (
         <div className="modal-overlay">
           <div className="modal-content animate-fade-in">
             <div className="modal-header">
-              <h2>Tambah Akun Sosial Media</h2>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Mendaftarkan platform sosial media baru untuk brand <strong>{selectedUnit.name}</strong>.</p>
+              <h2>{editingSocialAccount ? 'Edit Akun Sosial Media' : 'Tambah Akun Sosial Media'}</h2>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                {editingSocialAccount 
+                  ? <span>Mengubah rincian akun sosial media untuk brand <strong>{selectedUnit.name}</strong>.</span> 
+                  : <span>Mendaftarkan platform sosial media baru untuk brand <strong>{selectedUnit.name}</strong>.</span>
+                }
+              </p>
             </div>
 
             <form onSubmit={handleAddSocial}>
@@ -1508,8 +1586,8 @@ export default function App() {
               </div>
 
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setIsAddSocialOpen(false)}>Batal</button>
-                <button type="submit" className="btn">Daftarkan Akun</button>
+                <button type="button" className="btn btn-secondary" onClick={() => { setIsAddSocialOpen(false); setEditingSocialAccount(null); }}>Batal</button>
+                <button type="submit" className="btn">{editingSocialAccount ? 'Simpan Perubahan' : 'Daftarkan Akun'}</button>
               </div>
             </form>
           </div>

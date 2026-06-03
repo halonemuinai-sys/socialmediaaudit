@@ -133,6 +133,20 @@ function vercelApiPlugin() {
               return;
             }
 
+            // Baru: Edit Akun Sosial Media secara manual
+            if (req.method === 'POST' && action === 'edit-social') {
+              const { id, platform, handle, url } = postData;
+              const result = await pool.query(`
+                UPDATE social_audit.social_media_accounts
+                SET platform = $2, handle = $3, url = $4
+                WHERE id = $1
+                RETURNING *
+              `, [id, platform, handle, url]);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(result.rows[0]));
+              return;
+            }
+
             res.statusCode = 404;
             res.end(JSON.stringify({ error: 'Not Found' }));
           } catch (err) {

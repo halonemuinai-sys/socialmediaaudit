@@ -1,0 +1,36 @@
+import pool from './_db.js';
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method Not Allowed' });
+    return;
+  }
+
+  try {
+    const { id, platform, handle, url } = req.body;
+    const result = await pool.query(`
+      UPDATE social_audit.social_media_accounts
+      SET platform = $2, handle = $3, url = $4
+      WHERE id = $1
+      RETURNING *
+    `, [id, platform, handle, url]);
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('API Error /edit-social:', error);
+    res.status(500).json({ error: error.message });
+  }
+}

@@ -513,6 +513,26 @@ body {
   color: var(--primary-hover);
 }
 
+.edit-social-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.edit-social-btn:hover {
+  background: #f1f5f9;
+  color: var(--cherry) !important;
+}
+
 .audit-status-badge {
   font-size: 0.7rem;
   font-weight: 700;
