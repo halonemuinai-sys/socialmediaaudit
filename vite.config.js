@@ -123,6 +123,20 @@ function vercelApiPlugin() {
             // Baru: Tambah Akun Sosial Media secara manual
             if (req.method === 'POST' && action === 'add-social') {
               const { business_unit_id, platform, handle, url } = postData;
+              
+              // Cek duplikasi di database lokal
+              const checkDuplicate = await pool.query(`
+                SELECT id FROM social_audit.social_media_accounts
+                WHERE business_unit_id = $1 AND LOWER(platform) = LOWER($2) AND LOWER(handle) = LOWER($3)
+              `, [business_unit_id, platform, handle]);
+
+              if (checkDuplicate.rows.length > 0) {
+                res.statusCode = 400;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ error: 'Akun sosial media ini sudah terdaftar untuk brand ini.' }));
+                return;
+              }
+
               const result = await pool.query(`
                 INSERT INTO social_audit.social_media_accounts (business_unit_id, platform, handle, url)
                 VALUES ($1, $2, $3, $4)
@@ -144,6 +158,15 @@ function vercelApiPlugin() {
               `, [id, platform, handle, url]);
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify(result.rows[0]));
+              return;
+            }
+
+            // Baru: Hapus Akun Sosial Media
+            if (req.method === 'POST' && action === 'delete-social') {
+              const { id } = postData;
+              await pool.query('DELETE FROM social_audit.social_media_accounts WHERE id = $1', [id]);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true }));
               return;
             }
 

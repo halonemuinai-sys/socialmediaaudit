@@ -1,0 +1,30 @@
+import pool from './_db.js';
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method Not Allowed' });
+    return;
+  }
+
+  try {
+    const { id } = req.body;
+    await pool.query('DELETE FROM social_audit.social_media_accounts WHERE id = $1', [id]);
+    res.status(200).json({ success: true, message: 'Akun sosial media berhasil dihapus.' });
+  } catch (error) {
+    console.error('API Error /delete-social:', error);
+    res.status(500).json({ error: error.message });
+  }
+}

@@ -110,6 +110,12 @@ const EditIcon = ({ size = 16 }) => (
   </svg>
 );
 
+const TrashIcon = ({ size = 16 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
 const ExcelIcon = ({ size = 16 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ display: 'inline-block', verticalAlign: 'middle' }}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -489,6 +495,32 @@ export default function App() {
     });
   };
 
+  const handleDeleteSocial = async (accountId) => {
+    if (!window.confirm('Apakah Anda yakin ingin menghapus akun sosial media ini? Semua data audit untuk akun ini juga akan dihapus.')) return;
+
+    if (useSupabase) {
+      try {
+        const response = await fetch('/api/delete-social', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: accountId })
+        });
+        if (!response.ok) throw new Error('Gagal menghapus akun sosial media');
+        setSocialAccounts(socialAccounts.filter(s => s.id !== accountId));
+        setAuditLogs(auditLogs.filter(a => a.account_id !== accountId));
+      } catch (err) {
+        setErrorMsg(err.message);
+      }
+    } else {
+      const updatedSocials = socialAccounts.filter(s => s.id !== accountId);
+      const updatedAudits = auditLogs.filter(a => a.account_id !== accountId);
+      localStorage.setItem('mra_socials', JSON.stringify(updatedSocials));
+      localStorage.setItem('mra_audits', JSON.stringify(updatedAudits));
+      setSocialAccounts(updatedSocials);
+      setAuditLogs(updatedAudits);
+    }
+  };
+
   const openEditSocialModal = (account) => {
     setEditingSocialAccount(account);
     setNewSocial({
@@ -513,6 +545,20 @@ export default function App() {
   const handleAddSocial = async (e) => {
     e.preventDefault();
     if (!selectedUnit || !newSocial.handle || !newSocial.url) return;
+
+    // Cegah duplikasi di sisi klien (case-insensitive)
+    const cleanHandle = newSocial.handle.replace('@', '').trim().toLowerCase();
+    const isDuplicate = socialAccounts.some(s => 
+      s.business_unit_id === selectedUnit.id && 
+      s.platform.toLowerCase() === newSocial.platform.toLowerCase() && 
+      s.handle.toLowerCase() === cleanHandle &&
+      (!editingSocialAccount || s.id !== editingSocialAccount.id)
+    );
+
+    if (isDuplicate) {
+      alert(`Akun ${newSocial.platform} dengan handle @${newSocial.handle} sudah terdaftar untuk brand ini.`);
+      return;
+    }
 
     if (editingSocialAccount) {
       // Edit Akun Sosial Media Terdaftar
@@ -1405,6 +1451,16 @@ export default function App() {
                                 }}
                               >
                                 <EditIcon size={12} />
+                              </button>
+                              <button 
+                                className="delete-social-btn" 
+                                title="Hapus akun"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDeleteSocial(acc.id);
+                                }}
+                              >
+                                <TrashIcon size={12} />
                               </button>
                             </div>
                             <span 
