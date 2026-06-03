@@ -1288,18 +1288,16 @@ export default function App() {
                 </div>
 
                 <div className="detail-actions">
-                  {currentUser.role === 'ADMIN' && (
-                    <button 
-                      className="btn btn-secondary" 
-                      onClick={() => {
-                        const pic = getUnitPic(selectedUnit.id);
-                        setNewPic({ picName: pic ? pic.pic_name : '', businessUnitId: selectedUnit.id });
-                        setIsDelegationOpen(true);
-                      }}
-                    >
-                      👤 Kelola Delegasi
-                    </button>
-                  )}
+                  <button 
+                    className="btn btn-secondary" 
+                    onClick={() => {
+                      const pic = getUnitPic(selectedUnit.id);
+                      setNewPic({ picName: pic ? pic.pic_name : '', businessUnitId: selectedUnit.id });
+                      setIsDelegationOpen(true);
+                    }}
+                  >
+                    👤 Kelola Delegasi
+                  </button>
                   <button className="btn" onClick={openAddSocialModal}>
                     + Tambah Akun Sosial
                   </button>
@@ -1380,18 +1378,16 @@ export default function App() {
                         </div>
                       )}
                     </div>
-                    {currentUser.role === 'ADMIN' && (
-                      <button 
-                        className="btn btn-secondary" 
-                        style={{ padding: '8px 16px', fontSize: '0.85rem', fontWeight: 700 }}
-                        onClick={() => {
-                          setNewPic({ picName: pic ? pic.pic_name : '', businessUnitId: selectedUnit.id });
-                          setIsDelegationOpen(true);
-                        }}
-                      >
-                        {pic ? 'Ubah Delegasi' : 'Atur Nama'}
-                      </button>
-                    )}
+                    <button 
+                      className="btn btn-secondary" 
+                      style={{ padding: '8px 16px', fontSize: '0.85rem', fontWeight: 700 }}
+                      onClick={() => {
+                        setNewPic({ picName: pic ? pic.pic_name : '', businessUnitId: selectedUnit.id });
+                        setIsDelegationOpen(true);
+                      }}
+                    >
+                      {pic ? 'Ubah Delegasi' : 'Atur Nama'}
+                    </button>
                   </div>
                 );
               })()}
