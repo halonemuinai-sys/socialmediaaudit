@@ -1010,7 +1010,7 @@ export default function App() {
 
           <form onSubmit={handleLogin}>
             <div className="form-group">
-              <label>Username Karyawan</label>
+              <label>Username</label>
               <input 
                 type="text" 
                 className="form-control" 
